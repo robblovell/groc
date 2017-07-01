@@ -1,6 +1,6 @@
 # groc
 
-![Readme.md](http://justcuteanimals.com/wp-content/uploads/2015/02/BUNNY-rabbits-cute-animals-bunnies-pictures-pics.jpg)
+![Readme.md](./fluffybunny.jpg)
 
 Groc takes your _documented_ code, and in an admission that people aren't machines, generates
 documentation that follows the spirit of literate programming.  Take a look at the
