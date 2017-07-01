@@ -4,6 +4,7 @@ fs = require 'fs'
 path = require 'path'
 
 spate = require 'spate'
+shell = require 'shelljs'
 
 CompatibilityHelpers = require './utils/compatibility_helpers'
 Logger = require './utils/logger'
@@ -75,6 +76,7 @@ module.exports = class Project
         projectPath: currentFile.replace ///^#{Utils.regexpEscape @root + CompatibilityHelpers.pathSep}///, ''
         targetPath: if currentFile == indexPath then 'index' else fileMap[currentFile]
         pageTitle: if currentFile == indexPath then (options.indexPageTitle || 'index') else fileMap[currentFile]
+        extension: currentFile.split('.').pop()
 
       targetFullPath = path.resolve @outPath, "#{fileInfo.targetPath}.html"
 
@@ -91,13 +93,21 @@ module.exports = class Project
             # Mark the file as processed in the style, and return.
             style.markFileDone fileInfo
             return done()
+      if language.copyOnly
+        docPath = style.getDocPath(fileInfo.targetPath)+'.'+fileInfo.extension
+        docDirectory = docPath.substring(0,docPath.lastIndexOf("\/")+1)
+        @log.debug("Make directory: #{docDirectory}")
+        shell.mkdir('-p', docDirectory)
+        @log.debug("Copy from: #{fileInfo.projectPath} to #{docPath}")
+        shell.cp('-r', fileInfo.projectPath, docPath)
+      else
+        fs.readFile currentFile, 'utf-8', (error, data) =>
+          if error
+            @log.error "Failed to process %s: %s", currentFile, error.message
+            return callback error
 
-      fs.readFile currentFile, 'utf-8', (error, data) =>
-        if error
-          @log.error "Failed to process %s: %s", currentFile, error.message
-          return callback error
-
-        style.renderFile data, fileInfo, done
+          style.renderFile data, fileInfo, done
+      return
 
     pool.exec (error) =>
       return callback error if error

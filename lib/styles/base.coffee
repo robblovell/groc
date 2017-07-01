@@ -68,6 +68,8 @@ module.exports = class Base
 
             @renderDocFile segments, fileInfo, callback
 
+  getDocPath: (targetPath) ->
+    return path.resolve @project.outPath, "#{targetPath}"
   # renderDocTags: # THIS METHOD MUST BE DEFINED BY SUBCLASSES
 
   renderDocFile: (segments, fileInfo, callback) ->
@@ -75,7 +77,7 @@ module.exports = class Base
 
     throw new Error "@templateFunc must be defined by subclasses!" unless @templateFunc
 
-    docPath = path.resolve @project.outPath, "#{fileInfo.targetPath}.html"
+    docPath = @getDocPath(fileInfo.targetPath)+'.html'
 
     fsTools.mkdir path.dirname(docPath), '0755', (error) =>
       if error
