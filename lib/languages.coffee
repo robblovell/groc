@@ -1,9 +1,12 @@
 # # Supported Languages
-
 module.exports = LANGUAGES =
   Markdown:
     nameMatchers: ['.md', '.markdown','.mkd', '.mkdn', '.mdown']
     commentsOnly: true
+
+  Images:
+    nameMatchers: ['.jpg', '.png','.jpeg', '.gif']
+    copyOnly: true
 
   C:
     nameMatchers:      ['.c', '.h']
