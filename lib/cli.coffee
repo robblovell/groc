@@ -1,26 +1,26 @@
 # # Command Line Interface
 
 childProcess = require 'child_process'
-fs           = require 'fs'
-path         = require 'path'
+fs = require 'fs'
+path = require 'path'
 
-glob     = require 'glob'
+glob = require 'glob'
 optimist = require 'optimist'
 
-CLIHelpers   = require './utils/cli_helpers'
-Logger       = require './utils/logger'
+CLIHelpers = require './utils/cli_helpers'
+Logger = require './utils/logger'
 PACKAGE_INFO = require '../package.json'
-Project      = require './project'
-styles       = require './styles'
-Utils        = require './utils'
+Project = require './project'
+styles = require './styles'
+Utils = require './utils'
 
 
 # Readable command line output is just as important as readable documentation!  It is the first
 # interaction that a developer will have with a tool like this, so we want to leave a good
 # impression with nicely formatted and readable command line output.
 module.exports = CLI = (inputArgs, callback) ->
-  # In keeping with our console beautification project, make sure that our output isn't getting
-  # too comfortable with the user's next shell line.
+# In keeping with our console beautification project, make sure that our output isn't getting
+# too comfortable with the user's next shell line.
   actualCallback = callback
   callback = (args...) ->
     console.log ''
@@ -57,93 +57,93 @@ module.exports = CLI = (inputArgs, callback) ->
 
     help:
       describe: "You're looking at it."
-      alias:   ['h', '?']
-      type:     'boolean'
+      alias: ['h', '?']
+      type: 'boolean'
 
     glob:
       describe: "A file path or globbing expression that matches files to generate documentation for."
-      default:  (opts) -> opts.argv._
-      type:     'list'
+      default: (opts) -> opts.argv._
+      type: 'list'
 
     except:
       describe: "Glob expression of files to exclude.  Can be specified multiple times."
-      alias:    'e'
-      type:     'list'
+      alias: 'e'
+      type: 'list'
 
     github:
       describe: "Generate your docs in the gh-pages branch of your git repository.  --out is ignored."
-      alias:    'gh'
-      type:     'boolean'
+      alias: 'gh'
+      type: 'boolean'
 
     'repository-url':
       describe: "Supply your GitHub repository URL (if groc fails to guess it)."
-      type:     'string'
+      type: 'string'
 
     'only-render-newer':
       describe: "Only render files if the source is newer than the output."
-      default:  true
+      default: true
 
     out:
       describe: "The directory to place generated documentation, relative to the project root."
-      alias:    'o'
-      default:  './doc'
-      type:     'string'
+      alias: 'o'
+      default: './doc'
+      type: 'string'
 
     index:
       describe: "The file to use as the index of the generated documentation."
-      alias:    'i'
-      default:  'README.md'
+      alias: 'i'
+      default: 'README.md'
 
     'index-page-title':
       describe: "The index's page title in the generated documentation."
-      default:  'index'
+      default: 'index'
 
     root:
       describe: "The root directory of the project."
-      alias:    'r'
-      default:  '.'
-      type:     'path'
+      alias: 'r'
+      default: '.'
+      type: 'path'
 
     style:
       describe: "The style to use when generating documentation."
-      alias:    's'
-      default:  'Default'
+      alias: 's'
+      default: 'Default'
 
     highlighter:
       describe: "The highlighter to use. Either highlight.js (default) or pygments."
-      alias:    'hl'
-      default:  'highlight.js'
+      alias: 'hl'
+      default: 'highlight.js'
 
     strip:
       describe: "A path prefix to strip when generating documentation paths (or --no-strip)."
-      alias:    't'
+      alias: 't'
 
     'empty-lines':
       describe: "Allow empty comment lines."
-      default:  true
-      type:     'boolean'
+      default: true
+      type: 'boolean'
 
     'whitespace-after-token':
       describe: "Require whitespace after a comment token for a line to be considered a comment."
-      default:  true
-      type:     'boolean'
+      default: true
+      type: 'boolean'
 
     languages:
       describe: "Path to language definition file."
-      default:  "#{__dirname}/languages"
-      type:     'path'
+      default: "#{__dirname}/languages"
+      type: 'path'
 
     silent:
       describe: "Output errors only."
 
     version:
       describe: "Shows you the current version of groc (#{PACKAGE_INFO.version})"
-      alias:    'v'
+      alias: 'v'
 
     verbose:
       describe: "Output the inner workings of groc to help diagnose issues."
 
-   'very-verbose':
+    'very-verbose':
       describe: "Hey, you asked for it."
 
 
@@ -239,10 +239,10 @@ module.exports = CLI = (inputArgs, callback) ->
     project.generate options, (error) ->
       callback error
 
-  # ## GitHub
+# ## GitHub
   else
-    # We want to be able to annotate generated documentation with the project's GitHub URL.  This is
-    # handy for things like generating links directly to each file's source.
+# We want to be able to annotate generated documentation with the project's GitHub URL.  This is
+# handy for things like generating links directly to each file's source.
     CLIHelpers.guessPrimaryGitHubURL argv['repository-url'], (error, url, remote) ->
       console.log "publish_to_github", error, url, remote
 
@@ -273,9 +273,10 @@ module.exports = CLI = (inputArgs, callback) ->
         # 2. Copies the generated docs from `.git/groc-tmp` over any existing files in the branch.
         # 3. Creates a commit with _just_ the generated docs; any additional files are removed.
         # 4. Cleans up and switches back to the user's original branch.
-        script = childProcess.spawn path.resolve(__dirname, '..', 'scripts', 'publish-git-pages.sh'), [remote, projectConfig.commitMessage]
+        script = childProcess.spawn path.resolve(__dirname, '..', 'scripts', 'publish-git-pages.sh'), [remote,
+          projectConfig.commitMessage]
 
-        script.stdout.on 'data', (data) -> project.log.info  data.toString().trim()
+        script.stdout.on 'data', (data) -> project.log.info data.toString().trim()
         script.stderr.on 'data', (data) -> project.log.error data.toString().trim()
 
         script.on 'exit', (code) ->

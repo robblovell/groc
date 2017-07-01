@@ -1,4 +1,4 @@
-tableOfContents = <%= JSON.stringify(tableOfContents) %>
+`tableOfContents = <%= JSON.stringify(tableOfContents) %>`
 
 # # Page Behavior
 

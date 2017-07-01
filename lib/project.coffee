@@ -1,14 +1,14 @@
 # # groc API
 
-fs   = require 'fs'
+fs = require 'fs'
 path = require 'path'
 
 spate = require 'spate'
 
 CompatibilityHelpers = require './utils/compatibility_helpers'
-Logger               = require './utils/logger'
-Utils                = require './utils'
-styles               = require './styles'
+Logger = require './utils/logger'
+Utils = require './utils'
+styles = require './styles'
 
 
 # A core concept of `groc` is that your code is grouped into a project, and that there is a certain
@@ -16,9 +16,10 @@ styles               = require './styles'
 #
 # A project:
 module.exports = class Project
-  constructor: (root, outPath, minLogLevel=Logger::INFO) ->
+  constructor: (root, outPath, minLogLevel=Logger::INFO
+  ) ->
     @options = {}
-    @log     = new Logger minLogLevel
+    @log = new Logger minLogLevel
 
     # * Has a single root directory that contains (most of) it.
     @root = path.resolve root
@@ -42,9 +43,9 @@ module.exports = class Project
   # accomplishes.
   BATCH_SIZE: if oldNode then 10 else 1
 
-  # Where the magic happens.
-  #
-  # Currently, the only supported option is:
+# Where the magic happens.
+#
+# Currently, the only supported option is:
   generate: (options, callback) ->
     @log.trace 'Project#Generate(%j, ...)', options
     @log.info 'Generating documentation...'
@@ -57,7 +58,7 @@ module.exports = class Project
     # so that they can strip from the remainder.
     @stripPrefixes = [@root + CompatibilityHelpers.pathSep].concat @stripPrefixes
 
-    fileMap   = Utils.mapFiles @root, @files, @stripPrefixes
+    fileMap = Utils.mapFiles @root, @files, @stripPrefixes
     indexPath = path.resolve @root, @index
 
     pool = spate.pool (k for k of fileMap), maxConcurrency: @BATCH_SIZE, (currentFile, done) =>
@@ -69,32 +70,28 @@ module.exports = class Project
         return done()
 
       fileInfo =
-        language:    language
-        sourcePath:  currentFile
+        language: language
+        sourcePath: currentFile
         projectPath: currentFile.replace ///^#{Utils.regexpEscape @root + CompatibilityHelpers.pathSep}///, ''
-        targetPath:  if currentFile == indexPath then 'index' else fileMap[currentFile]
-        pageTitle:   if currentFile == indexPath then (options.indexPageTitle || 'index') else fileMap[currentFile]
+        targetPath: if currentFile == indexPath then 'index' else fileMap[currentFile]
+        pageTitle: if currentFile == indexPath then (options.indexPageTitle || 'index') else fileMap[currentFile]
 
       targetFullPath = path.resolve @outPath, "#{fileInfo.targetPath}.html"
-      
+
       # Only render files whose sources are newer than output?
       if options.onlyRenderNewer
-        
+
         if fs.existsSync(currentFile) and fs.existsSync(targetFullPath)
-          
+
           sourceStat = fs.statSync currentFile
           targetStat = fs.statSync targetFullPath
-          
+
           # Compare timestamps.
           if targetStat.mtime.getTime() > sourceStat.mtime.getTime()
-          
             # Mark the file as processed in the style, and return.
-            # 
-            # TODO this is a bad API, "Base" style class should provide a
-            # method to this effect.
-            style.files.push fileInfo
+            style.markFileDone fileInfo
             return done()
-      
+
       fs.readFile currentFile, 'utf-8', (error, data) =>
         if error
           @log.error "Failed to process %s: %s", currentFile, error.message
