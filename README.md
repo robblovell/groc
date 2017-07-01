@@ -1,6 +1,6 @@
 # groc
 
-![Readme.md](./fluffybunny.jpg)
+![Readme.md](images/fluffybunny.jpg)
 
 Groc takes your _documented_ code, and in an admission that people aren't machines, generates
 documentation that follows the spirit of literate programming.  Take a look at the
