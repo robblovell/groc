@@ -14,10 +14,13 @@ module.exports = class Base
     @files   = []
     @outline = {} # Keyed on target path
 
+  markFileDone: (fileInfo) ->
+    @files.push fileInfo
+
   renderFile: (data, fileInfo, callback) ->
     @log.trace 'BaseStyle#renderFile(..., %j, ...)', fileInfo
 
-    @files.push fileInfo
+    @markFileDone fileInfo
 
     segments = Utils.splitSource data, fileInfo.language,
       requireWhitespaceAfterToken: !!@project.options.requireWhitespaceAfterToken
