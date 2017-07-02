@@ -1,6 +1,6 @@
 # groc
 
-![Readme.md](images/fluffybunny.jpg)
+![Readme.md](images/fluffybunny1.jpg)
 
 Groc takes your _documented_ code, and in an admission that people aren't machines, generates
 documentation that follows the spirit of literate programming.  Take a look at the
@@ -34,10 +34,11 @@ Groc will:
 * Read a configuration file so that you don't have to think when you want your documentation built;
   you just type `groc`.
 
-
 ## How?
 
 ### Installing groc
+
+![Readme.md](images/fluffybunny2.jpg)
 
 Groc depends on [Node.js](http://nodejs.org/).  Once you have those installed - and assuming that 
 your node install came with [npm](http://npmjs.org/) - you can install groc via:
@@ -81,6 +82,8 @@ groc, if you are interested.
 
 
 ### Configuring groc (.groc.json)
+
+![Readme.md](images/fluffybunny3.jpg)
 
 Groc supports a simple JSON configuration format once you know the config values that appeal to you.
 

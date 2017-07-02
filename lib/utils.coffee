@@ -613,17 +613,19 @@ module.exports = Utils =
     highlightCodeUsingHighlightJS(segments, language, callback)
     
   markdownCode: (segments, language, callback) ->
-    LINK_REGEX = /\((.+)\)/g
-    TEXT_REGEX = /\[(.+)\]/g
+    LINK_REGEX = /\((.+)\)/
+    TEXT_REGEX = /\[(.+)\]/
     for segment, i in segments
       segmentCode = segment.code.join '\n'
+      segment.highlightedCode = segmentCode
       if segmentCode[0] is '!'
         console.log(segmentCode)
-        link = LINK_REGEX.exec(segmentCode)[1]
-        text = TEXT_REGEX.exec(segmentCode)[1]
-        segment.highlightedCode = '<div><img src="'+link+'"></img><p>'+text+'</p></div>'
-      else
-        segment.highlightedCode = segmentCode
+        links = LINK_REGEX.exec(segmentCode)
+        texts = TEXT_REGEX.exec(segmentCode)
+        if links? and links.length > 1 and texts? and texts.length > 1
+          link = links[1]
+          text = texts[1]
+          segment.highlightedCode = '<div><img src="'+link+'"></img><p>'+text+'</p></div>'
     callback()
 
   parseDocTags: (segments, project, callback) ->
