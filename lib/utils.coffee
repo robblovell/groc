@@ -115,6 +115,21 @@ module.exports = Utils =
   pathDepth: (path) ->
     path.split(/[\/\\]/).length
 
+  moveImagesRight: (lines) ->
+    segments = []
+    # a Segement is code, comments, foldMarker
+    currSegment = new @Segment
+    for line in lines
+      if line[0] is '#'
+        segments.push(currSegment)
+        currSegment = new @Segment
+      if line[0] is '!'
+        currSegment.code.push(line)
+      else
+        currSegment.comments.push(line)
+
+    return segments
+
   # Split source code into segments (comment + code pairs)
   splitSource: (data, language, options={}) ->
     lines = data.split /\r?\n/
@@ -124,7 +139,11 @@ module.exports = Utils =
     lines[0] = '' if lines[0][0..1] is '#!'
 
     # Special case: If the language is comments-only, we can skip pygments
-    return [new @Segment [], lines] if language.commentsOnly
+    if language.commentsOnly
+      if language.moveImagesRight
+        return @moveImagesRight(lines)
+      else
+        return [new @Segment [], lines]
 
     # Special case: If the language is code-only, we can shorten the process
     return [new @Segment lines, []] if language.codeOnly
@@ -592,6 +611,20 @@ module.exports = Utils =
     Logger.warn "Usage of highlightCode is deprecated. Specify highlighter"+
       " instead. (Using highlight.js as default.)"
     highlightCodeUsingHighlightJS(segments, language, callback)
+    
+  markdownCode: (segments, language, callback) ->
+    LINK_REGEX = /\((.+)\)/g
+    TEXT_REGEX = /\[(.+)\]/g
+    for segment, i in segments
+      segmentCode = segment.code.join '\n'
+      if segmentCode[0] is '!'
+        console.log(segmentCode)
+        link = LINK_REGEX.exec(segmentCode)[1]
+        text = TEXT_REGEX.exec(segmentCode)[1]
+        segment.highlightedCode = '<div><img src="'+link+'"></img><p>'+text+'</p></div>'
+      else
+        segment.highlightedCode = segmentCode
+    callback()
 
   parseDocTags: (segments, project, callback) ->
     TAG_REGEX = /(?:^|\n)@(\w+)(?:\s+(.*))?/

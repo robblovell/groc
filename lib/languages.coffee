@@ -3,6 +3,7 @@ module.exports = LANGUAGES =
   Markdown:
     nameMatchers: ['.md', '.markdown','.mkd', '.mkdn', '.mdown']
     commentsOnly: true
+    moveImagesRight: true
 
   Images:
     nameMatchers: ['.jpg', '.png','.jpeg', '.gif']

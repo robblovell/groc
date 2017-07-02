@@ -40,7 +40,9 @@ module.exports = class Base
 
         @renderDocTags segments
 
-        if @project.options.highlighter is 'pygments'
+        if fileInfo.language.moveImagesRight
+          highlightCode = Utils.markdownCode
+        else if @project.options.highlighter is 'pygments'
           highlightCode = Utils.highlightCodeUsingPygments
         else
           highlightCode = Utils.highlightCodeUsingHighlightJS
@@ -67,6 +69,7 @@ module.exports = class Base
             segments = StyleHelpers.segmentizeSoloHeaders segments
 
             @renderDocFile segments, fileInfo, callback
+    return
 
   getDocPath: (targetPath) ->
     return path.resolve @project.outPath, "#{targetPath}"

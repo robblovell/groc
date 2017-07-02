@@ -76,15 +76,12 @@ module.exports = class Project
         projectPath: currentFile.replace ///^#{Utils.regexpEscape @root + CompatibilityHelpers.pathSep}///, ''
         targetPath: if currentFile == indexPath then 'index' else fileMap[currentFile]
         pageTitle: if currentFile == indexPath then (options.indexPageTitle || 'index') else fileMap[currentFile]
-        extension: currentFile.split('.').pop()
 
       targetFullPath = path.resolve @outPath, "#{fileInfo.targetPath}.html"
 
       # Only render files whose sources are newer than output?
       if options.onlyRenderNewer
-
         if fs.existsSync(currentFile) and fs.existsSync(targetFullPath)
-
           sourceStat = fs.statSync currentFile
           targetStat = fs.statSync targetFullPath
 
@@ -93,13 +90,16 @@ module.exports = class Project
             # Mark the file as processed in the style, and return.
             style.markFileDone fileInfo
             return done()
+
       if language.copyOnly
-        docPath = style.getDocPath(fileInfo.targetPath)+'.'+fileInfo.extension
+        docPath = style.getDocPath(fileInfo.projectPath)
         docDirectory = docPath.substring(0,docPath.lastIndexOf("\/")+1)
         @log.debug("Make directory: #{docDirectory}")
         shell.mkdir('-p', docDirectory)
         @log.debug("Copy from: #{fileInfo.projectPath} to #{docPath}")
         shell.cp('-r', fileInfo.projectPath, docPath)
+        style.markFileDone fileInfo
+        return done()
       else
         fs.readFile currentFile, 'utf-8', (error, data) =>
           if error

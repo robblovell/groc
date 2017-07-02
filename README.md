@@ -10,7 +10,6 @@ It is very heavily influenced by [Jeremy Ashkenas](https://github.com/jashkenas)
 [docco](http://jashkenas.github.com/docco/), and is an attempt to further enhance the idea (thus,
 groc can't tout the same quick 'n dirty principles of docco).
 
-
 ## Maintainers
 
 Groc, unfortunately, does not have any active maintainers. If you are interested in picking up the
