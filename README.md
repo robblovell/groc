@@ -1,6 +1,6 @@
 # groc
 
-![Readme.md](images/fluffybunny1.jpg)
+<img src="images/fluffybunny1.jpg" style="width:300px"/>
 
 Groc takes your _documented_ code, and in an admission that people aren't machines, generates
 documentation that follows the spirit of literate programming.  Take a look at the
@@ -14,7 +14,6 @@ groc can't tout the same quick 'n dirty principles of docco).
 
 Groc, unfortunately, does not have any active maintainers. If you are interested in picking up the
 torch, please toss me an email (ian@nevir.net).
-
 
 ## What does it give you?
 
