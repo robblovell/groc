@@ -121,12 +121,21 @@ module.exports = DOC_TAGS =
     # @return {Object}
     parseValue:  (value) ->
       parts = collapse_space(value).match /^\{([^\}]+)\}\s+(\[?)([\w\.\$]+)(?:=([^\s\]]+))?(\]?)\s*(.*)$/
-      types:        (parts[1]?.split /\|{1,2}/g)
-      isOptional:   (parts[2] == '[' and parts[5] == ']')
-      varName:      parts[3]
-      isSubParam:   /\./.test parts[3]
-      defaultValue: parts[4]
-      description:  parts[6]
+      console.log(JSON.stringify(parts))
+      if (parts?)
+        types:        (parts[1]?.split /\|{1,2}/g)
+        isOptional:   (parts[2] == '[' and parts[5] == ']')
+        varName:      parts[3]
+        isSubParam:   /\./.test parts[3]
+        defaultValue: parts[4]
+        description:  parts[6]
+      else
+        types:        "#{value},{value}"
+        isOptional:   value
+        varName:      value
+        isSubParam:   value
+        defaultValue: value
+        description:  value
 
     # converts parsed values to markdown text
     #
@@ -181,21 +190,34 @@ module.exports = DOC_TAGS =
     section:     'returns'
     parseValue:  (value) ->
       parts = collapse_space(value).match /^\{([^\}]+)\}\s*(.*)$/
-      types:       parts[1].split /\|{1,2}/g
-      description: parts[2]
+      console.log(JSON.stringify("value:"+value+" parts:"+parts))
+      if parts?
+        types:       parts[1].split /\|{1,2}/g
+        description: parts[2]
+      else
+        types: "#{value},#{value}"
+        description: value
     markdown:     (value) ->
       types = ("#{humanize.article type} #{type}" for type in value.types)
-      "**returns #{types.join ' or '}**#{if value.description.length then '<br/>(' else ''}#{value.description}#{if value.description.length then ')' else ''}"
+      if value.description? and types?
+        "**returns #{types.join ' or '}**#{if value.description.length then '<br/>(' else ''}#{value.description}#{if value.description.length then ')' else ''}"
+      else
+        value
   returns:       'return'
   throw:
     section:     'returns'
     parseValue:  (value) ->
       parts = collapse_space(value).match /^\{([^\}]+)\}\s*(.*)$/
+      console.log(JSON.stringify("value:"+value+" parts:"+parts))
       types:       parts[1].split /\|{1,2}/g
       description: parts[2]
     markdown:    (value) ->
       types = ("#{humanize.article type} #{type}" for type in value.types)
-      "**can throw #{types.join ' or '}**#{if value.description.length then '<br/>(' else ''}#{value.description}#{if value.description.length then ')' else ''}"
+      console.log(JSON.stringify("value:"+value+" types:"+types))
+      if value.description? and types?
+        "**can throw #{types.join ' or '}**#{if value.description.length then '<br/>(' else ''}#{value.description}#{if value.description.length then ')' else ''}"
+      else
+        value
   throws:        'throw'
 
   defaultNoValue:

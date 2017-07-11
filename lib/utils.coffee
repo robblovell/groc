@@ -115,14 +115,18 @@ module.exports = Utils =
   pathDepth: (path) ->
     path.split(/[\/\\]/).length
 
+  # Any lines beginning with ! represent links. Move them to the right hand code side of the documentation page.
   moveImagesRight: (lines) ->
     segments = []
     # a Segement is code, comments, foldMarker
     currSegment = new @Segment
     for line in lines
+      # divide title sections into the comment side of a new segments.
       if line[0] is '#'
         segments.push(currSegment)
         currSegment = new @Segment
+      # move links and images to the code side of the segment.
+      # other lines are comments.
       if line[0] is '!'
         currSegment.code.push(line)
       else

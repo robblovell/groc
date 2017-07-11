@@ -83,8 +83,6 @@ groc, if you are interested.
 
 ### Configuring groc (.groc.json)
 
-![Readme.md](images/fluffybunny3.jpg)
-
 Groc supports a simple JSON configuration format once you know the config values that appeal to you.
 
 Create a `.groc.json` file in your project root, where each key maps to an option you would pass to
@@ -102,6 +100,8 @@ From now on, if you call `groc` without any arguments, it will use your pre-defi
 
 
 ## Literate programming?
+
+![Readme.md](images/fluffybunny3.jpg)
 
 [Literate programming](http://en.wikipedia.org/wiki/Literate_programming) is a programming
 methodology coined by [Donald Knuth](http://en.wikipedia.org/wiki/Donald_Knuth).  The primary tenet

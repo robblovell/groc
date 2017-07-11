@@ -11,7 +11,6 @@ Logger = require './utils/logger'
 Utils = require './utils'
 styles = require './styles'
 
-
 # A core concept of `groc` is that your code is grouped into a project, and that there is a certain
 # amount of context that it lends to your documentation.
 #

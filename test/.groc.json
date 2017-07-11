@@ -1,0 +1,9 @@
+{
+  "glob": [
+    "*.coffee",
+    "*.java",
+    "*.js"
+  ],
+  "github": false,
+  "repository-url": "https://github.com/nevir/groc"
+}

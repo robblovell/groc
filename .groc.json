@@ -1,13 +1,14 @@
 {
   "glob": [
+    "test/**/*.js",
     ".groc.json",
-    "images/*.jpg",
     "lib/**/*.coffee",
     "lib/styles/*/style.sass",
     "lib/styles/*/*.jade",
     "scripts/**/*.sh",
     "package.json",
-    "README.md"
+    "README.md",
+    "images/*.jpg"
   ],
   "github": false,
   "repository-url": "https://github.com/nevir/groc"
