@@ -122,14 +122,12 @@ module.exports = Utils =
     currSegment = new @Segment
     for line in lines
       # divide title sections into the comment side of a new segments.
-      console.log(line[0..4])
       if line[0] is '#'
         segments.push(currSegment)
         currSegment = new @Segment
       # move links and images to the code side of the segment.
       # other lines are comments.
       else if line[0] is '!' or line[0..3] is '<img'
-        console.log("push line: "+line)
         currSegment.code.push(line)
       else
         currSegment.comments.push(line)
